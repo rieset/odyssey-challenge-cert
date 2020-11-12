@@ -1,20 +1,18 @@
 import { InjectionToken, Provider } from '@angular/core'
-import {
-  ContractGrantModel
-} from '@services/contract/contract.model'
 import { ContractService } from '@services/contract/contract.service'
-import { catchError } from 'rxjs/operators'
+import { catchError, tap } from 'rxjs/operators'
 import { translate } from '@ngneat/transloco'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { LoadingWrapper, LoadingWrapperModel } from '@libs/loading-wrapper/loading-wrapper'
+import { ContractCertificateModel } from '@services/contract/contract.model'
 
-export const GRANTS = new InjectionToken<LoadingWrapperModel<ContractGrantModel[]>>(
+export const CERTS = new InjectionToken<LoadingWrapperModel<ContractCertificateModel[]>>(
   'A stream with contracts list'
 )
 
-export const GRANTS_PROVIDERS: Provider[] = [
+export const CERTS_PROVIDERS: Provider[] = [
   {
-    provide: GRANTS,
+    provide: CERTS,
     deps: [ContractService, MatSnackBar],
     useFactory: grantsFactory
   }
@@ -23,12 +21,13 @@ export const GRANTS_PROVIDERS: Provider[] = [
 export function grantsFactory (
   contractService: ContractService,
   snackBar: MatSnackBar
-): LoadingWrapperModel<ContractGrantModel[]> {
+): LoadingWrapperModel<ContractCertificateModel[]> {
   return new LoadingWrapper(
-    contractService.streamTasks.pipe(catchError((error) => {
+    contractService.streamTasks.pipe(
+      catchError((error) => {
       // Todo обработать ошибки в нормальное сообщение
-      snackBar.open(error, translate('messages.ok'))
-      return []
-    }))
+        snackBar.open(error, translate('messages.ok'))
+        return []
+      }))
   )
 }

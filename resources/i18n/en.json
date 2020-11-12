@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Application",
+    "title": "Certificate requests",
     "header": {
       "about": "About",
       "setting": "Setting",
@@ -11,6 +11,9 @@
     },
     "navigation": {
       "back": "Back"
+    },
+    "labels": {
+      "in": "in"
     }
   },
   "listing": {

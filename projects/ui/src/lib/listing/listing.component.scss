@@ -1,9 +1,22 @@
-@import '../../../../../resources/styles/index';
+@import 'variables';
 
+.listing {
+  @include layout();
 
-h1 {
-  @include text-title(h1);
+  &__cards {
+    @include column(span 4, 1); }
+
+  &__view {
+    @include column(span 8, 1); }
+
+  &__card {
+    display: flex;
+
+    margin-bottom: 20px;
+
+    &-status {
+      padding-left: 20px;
+    }
+  }
+
 }
-
-.btn-container {
-  @include btn-container(); }

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
+import { PreloaderService } from '@services/preloader/preloader.service'
 
 @Component({
   selector: 'app-not-found-page',
@@ -8,4 +9,10 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 })
 export class NotFoundPageComponent implements OnInit {
   ngOnInit (): void {}
+
+  constructor (
+      private preloaderService: PreloaderService
+  ) {
+    this.preloaderService.load()
+  }
 }

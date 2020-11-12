@@ -11,7 +11,8 @@ import {
 import { API, AppApiInterface } from '@constants'
 import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import {
-  ContractDataModel, ContractGrantModel,
+  ContractCertificateModel,
+  ContractDataModel,
   ContractRawData,
   ContractRawDataEntityId,
   ContractRawDataNumber,
@@ -27,10 +28,6 @@ export class ContractService {
 
   private contractRefresh$: Subject<null> = new Subject()
 
-  // @ts-ignore
-  private contractState$: BehaviorSubject<ContractDataModel> = new BehaviorSubject(
-    {})
-
   private readonly contractState = this.http.get<Observable<ContractRawData>>(this.apiGetAddressData.href, {
     headers: {
       accept: 'application/json; charset=utf-8'
@@ -40,10 +37,6 @@ export class ContractService {
     repeatWhen(() => this.contractRefresh$),
     map((data: ContractRawData) => {
       return this.prepareData(data)
-    }),
-    switchMap((data: ContractDataModel) => {
-      this.contractState$.next(data)
-      return this.contractState$.pipe(takeUntil(this.contractRefresh$))
     }),
     tap((data) => {
       this.preloaderService.load()
@@ -58,21 +51,18 @@ export class ContractService {
     refCount()
   )
 
-  public readonly streamTasks: Observable<ContractGrantModel[]> = this.contractState.pipe(map((contract) => {
-    return Object.keys(contract?.tasks).map((entityKey: string) => {
+  public readonly streamTasks: Observable<ContractCertificateModel[]> = this.contractState.pipe(map((contract) => {
+    console.log('contract', contract)
+    if (!contract?.template) {
+      return []
+    }
+
+    return Object.keys(contract?.template).map((entityKey: string) => {
       return {
-        ...contract?.tasks[entityKey],
+        ...contract?.template[entityKey],
         id: entityKey
       }
     })
-  }))
-
-  public readonly streamDAO = this.contractState.pipe(map((contract) => {
-    return contract?.dao
-  }))
-
-  public readonly streamWorkGroup = this.contractState.pipe(map((contract) => {
-    return contract?.working
   }))
 
   constructor (
@@ -80,10 +70,6 @@ export class ContractService {
       private readonly preloaderService: PreloaderService,
       @Inject(API) private readonly api: AppApiInterface
   ) {}
-
-  refresh () {
-    this.contractRefresh$.next(null)
-  }
 
   private group (keys: string[], context: {[s: string]: object}, value: ContractRawDataString|ContractRawDataNumber): void {
     // Todo поправить типизацию, пришлось лезть в контракт и переделывать структуру данных
@@ -113,9 +99,9 @@ export class ContractService {
     }, {})
   }
 
-  public entityById (entityId: ContractRawDataEntityId): Observable<ContractGrantModel> {
+  public entityById (entityId: ContractRawDataEntityId): Observable<ContractCertificateModel> {
     return this.stream.pipe(map((data) => {
-      return data?.tasks[entityId]
+      return data?.template[entityId]
     }))
   }
 }

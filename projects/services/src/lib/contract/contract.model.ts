@@ -19,16 +19,20 @@ export interface ContractRawDataNumber {
 
 export type ContractRawData = ContractRawDataString[]
 
-export interface ContractGrantModel {
+export interface ContractCertificateModel {
   id?: ContractRawDataEntityId
   status?: ContractRawDataString
   title?: ContractRawDataString
-  reward?: ContractRawDataNumber
-  voting?: {
-    amount?: ContractRawDataNumber
-    state?: ContractRawDataNumber
-  }
-  voted?: {[s: string]: ContractRawDataNumber}
+  description?: ContractRawDataString
+  author?: ContractRawDataString
+  company?: ContractRawDataString
+  link?: ContractRawDataString
+
+  // voting?: {
+  //   amount?: ContractRawDataNumber
+  //   state?: ContractRawDataNumber
+  // }
+  // voted?: {[s: string]: ContractRawDataNumber}
 }
 
 export interface ContractDataModel {
@@ -46,5 +50,5 @@ export interface ContractDataModel {
     members: ContractRawDataString
     size: ContractRawDataNumber
   }
-  tasks: {[s: string]: ContractGrantModel}
+  template: {[s: string]: ContractCertificateModel}
 }
