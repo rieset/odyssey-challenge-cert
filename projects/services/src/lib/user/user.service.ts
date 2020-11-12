@@ -1,102 +1,78 @@
-import { Injectable } from '@angular/core'
+import { Inject, Injectable } from '@angular/core'
 import { OtherDataInterface, RoleEnum, UserDataInterface } from '@services/user/user.interface'
 import { SignerService } from '@services/signer/signer.service'
 import { ContractService } from '@services/contract/contract.service'
-import { environment } from '../../../../dapp/src/environments/environment'
-import { BehaviorSubject } from 'rxjs'
-import { translate } from '@ngneat/transloco'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
+import { map, take, tap } from 'rxjs/operators'
+import { API, AppApiInterface } from '@constants'
+import { SignerUser } from '@services/signer/signer.model'
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  otherData = new BehaviorSubject<OtherDataInterface>({
-    DAOMemberAddress: [],
-    WorkGroupAddress: [],
-    masterAddress: environment.apis.contractAddress
-  })
-
-  userData = new BehaviorSubject<UserDataInterface>({
+  private readonly userData$ = new BehaviorSubject<UserDataInterface>({
     userRole: RoleEnum.unauthorized,
     userAddress: ''
   })
 
   constructor (
+    @Inject(API) private readonly api: AppApiInterface,
     private signerService: SignerService,
-    private contractService: ContractService,
-    private snackBar: MatSnackBar
+    private contractService: ContractService
   ) {
-    this._subscribe()
-  }
+    combineLatest([
+      this.signerService.user,
+      this.contractService.stream
+    ]).pipe(map(([user, contract]) => {
+      console.log('User', user)
 
-  _subscribe (): void {
-    this.signerService.user.subscribe((e) => {
-      if (e.address) {
-        this.userData.next({
-          ...this.userData.getValue(),
-          userAddress: e.address
-        })
-        this._defineRol()
+      if (user.address) {
+        let role = RoleEnum.authorized
+
+        if (contract?.working?.members?.value.indexOf(';' + user.address)) {
+          role = RoleEnum.workingGroup
+        }
+
+        if (contract?.dao?.members?.value.indexOf(';' + user.address)) {
+          role = RoleEnum.DAOMember
+        }
+
+        if (this.api.contractAddress === user.address) {
+          role = RoleEnum.master
+        }
+
+        return {
+          userAddress: user.address,
+          userRole: role
+        }
       }
-    })
-    this.contractService.streamDAO.subscribe((e) => {
-      this.otherData.next({
-        ...this.otherData.getValue(),
-        DAOMemberAddress: (Object.keys(e[0]) as [])
+
+      return {
+        userRole: RoleEnum.unauthorized,
+        userAddress: ''
+      }
+    }))
+      .subscribe((user: UserDataInterface) => {
+        this.userData$.next(user)
       })
-      this._defineRol()
-    })
-    this.contractService.streamWorkGroup.subscribe((e) => {
-      this.otherData.next({
-        ...this.otherData.getValue(),
-        WorkGroupAddress: (Object.keys(e[0].member) as [])
-      })
-      this._defineRol()
-    })
   }
 
-  signup () {
-    this.signerService.login().subscribe(() => {
-    }, (error) => {
-      this.snackBar.open(error, translate('messages.ok'))
-    })
+  public get user (): Observable<UserDataInterface> {
+    return this.userData$.pipe()
   }
 
-  logout () {
-    this.userData.next({
-      userRole: RoleEnum.unauthorized,
-      userAddress: ''
-    })
+  public login () {
+    return this.signerService.login()
   }
 
-  _defineRol (): void {
-    if (this.userData.value.userAddress === '') {
-      this.userData.next({
-        ...this.userData.getValue(),
-        userRole: RoleEnum.unauthorized
-      })
-    } else if (this.userData.value.userAddress) {
-      this.userData.next({
-        ...this.userData.getValue(),
-        userRole: RoleEnum.authorized
-      })
-    } else if (this.otherData.value.DAOMemberAddress.includes(this.userData.value.userAddress)) {
-      this.userData.next({
-        ...this.userData.getValue(),
-        userRole: RoleEnum.DAOMember
-      })
-    } else if (this.otherData.value.WorkGroupAddress.includes(this.userData.value.userAddress)) {
-      this.userData.next({
-        ...this.userData.getValue(),
-        userRole: RoleEnum.workingGroup
-      })
-    }
-    if (this.otherData.value.masterAddress === this.userData.value.userAddress) {
-      this.userData.next({
-        ...this.userData.getValue(),
-        userRole: RoleEnum.master
-      })
-    }
+  public logout () {
+    return this.signerService.logout()
+      .pipe(tap(() => {
+        this.userData$.next({
+          userRole: RoleEnum.unauthorized,
+          userAddress: ''
+        })
+      }))
   }
 }

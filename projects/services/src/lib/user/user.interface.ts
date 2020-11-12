@@ -14,7 +14,7 @@ export interface UserDataInterface {
 }
 
 export interface OtherDataInterface {
-  DAOMemberAddress: string[],
-  WorkGroupAddress: string[],
+  DAOGroupAddress: string[],
+  WorkingGroupAddress: string[],
   masterAddress: string
 }

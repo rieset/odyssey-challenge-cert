@@ -2,18 +2,18 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 
-$app-theme-light: mat-light-theme((
+$app-theme-dark: mat-dark-theme((
   color: (
-    primary: $mat-blue,
-    accent: $mat-red
+    primary: mat-palette($mat-blue),
+    accent: mat-palette($mat-red)
   )
 ));
 
 :root {
-  --primary: hex2rgb(map_get($app-theme-light, primary));
-  --secondary: hex2rgb(map_get($app-theme-light, secondary));
-  --accent: hex2rgb(map_get($app-theme-light, accent));
+  --primary: map_get($app-theme-dark, primary);
+  --secondary: map_get($app-theme-dark, secondary);
+  --accent: map_get($app-theme-dark, accent);
 
-  --body-bg: hex2rgb(map_get(map_get($app-theme-light, background), background));
-  --body-color: hex2rgb(map_get(map_get($app-theme-light, foreground), based));
+  --body-color: #fff;
+  --body-bg: #1b2234;
 }

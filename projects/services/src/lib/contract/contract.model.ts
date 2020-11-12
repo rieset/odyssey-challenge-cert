@@ -33,13 +33,11 @@ export interface ContractGrantModel {
 
 export interface ContractDataModel {
   working: {
-    group: {
-      member: {[s: string]: {
-        weight: ContractRawDataString
-      }}
-      name: ContractRawDataString
-      size: ContractRawDataNumber
-    }
+    members: ContractRawDataString
+    member: {[s: string]: {
+      weight: ContractRawDataString
+    }}
+    size: ContractRawDataNumber
   }
   dao: {
     member: {[s: string]: {

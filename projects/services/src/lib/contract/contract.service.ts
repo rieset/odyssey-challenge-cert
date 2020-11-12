@@ -17,6 +17,7 @@ import {
   ContractRawDataNumber,
   ContractRawDataString
 } from './contract.model'
+import { PreloaderService } from '@services/preloader/preloader.service'
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,7 @@ export class ContractService {
       return this.contractState$.pipe(takeUntil(this.contractRefresh$))
     }),
     tap((data) => {
+      this.preloaderService.load()
       console.log('Origin contract data :: projects/services/src/lib/contract/contract.service.ts: 47\n\n', data)
     }),
     publishReplay(1),
@@ -66,15 +68,16 @@ export class ContractService {
   }))
 
   public readonly streamDAO = this.contractState.pipe(map((contract) => {
-    return Object.values(contract?.dao)
+    return contract?.dao
   }))
 
   public readonly streamWorkGroup = this.contractState.pipe(map((contract) => {
-    return Object.values(contract?.working)
+    return contract?.working
   }))
 
   constructor (
       private readonly http: HttpClient,
+      private readonly preloaderService: PreloaderService,
       @Inject(API) private readonly api: AppApiInterface
   ) {}
 

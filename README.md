@@ -1,7 +1,14 @@
-# Waves Grants
+# Waves Odyssey Challenge
 
-[![Linter](https://github.com/rieset/waves-grants/workflows/Linter/badge.svg)](https://github.com/rieset/waves-grants/actions)
-[![Testing](https://github.com/rieset/waves-grants/workflows/Testing/badge.svg)](https://github.com/rieset/waves-grants/actions)
+## Certificates Dashboard
+
+[![Linter](https://github.com/rieset/odyssey-challenge-cert/workflows/Linter/badge.svg)](https://github.com/rieset/odyssey-challenge-cert/actions)
+[![Testing](https://github.com/rieset/odyssey-challenge-cert/workflows/Testing/badge.svg)](https://github.com/rieset/odyssey-challenge-cert/actions)
+
+## Tools
+
+- All contract endpoints [Auto dApp Interface](https://waves-dapp.com/3Mvbw1Sx9xtM6akJrBPorkPpp4B3sJRFPFX)
+- Online [IDE](https://waves-ide.com/) for edit contract `/contracts/certificate.ride`
 
 ## Modules
 

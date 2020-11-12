@@ -1,22 +1,26 @@
-<div class="br3"></div>
-<div class="br3"></div>
-<header class="container header">
-  <div class="header__back" (click)="goBack()" *ngIf="!(this.router.url == '/')">
-    <img src="assets/icons/back.svg">
-  </div>
-  <div class="header__urls">
-    <a [routerLink]="constants.routes.about | route" routerLinkActive="active">{{ 'app.header.about' | transloco }}</a>
-    <ng-container *ngIf="userRole === RoleEnum.unauthorized">
-      <div #guestTemplate (click)="signupHandler()"
-           routerLinkActive="active">{{ 'app.header.signup' | transloco }}</div>
-    </ng-container>
-    <ng-container *ngIf="userRole === RoleEnum.authorized">
-    </ng-container>
-    <ng-template #guestTemplate>
-    </ng-template>
-    <div class="header__profile" *ngIf="user$ | async as user; else guestTemplate">
-      <div (click)="logoutHandler()">{{ 'app.header.logout' | transloco }}</div>
+<header class="header">
+
+  <div class="container header__panel">
+    <div class="header__panel-link" *ngIf="user$ | async as user">
+      <div [ngSwitch]="user?.userRole">
+        <ng-template [ngSwitchCase]="RoleEnum.unauthorized">
+          <div
+                  class="header__panel-link"
+                  (click)="signupHandler()"
+                  routerLinkActive="active">{{ 'app.header.signup' | transloco }}</div>
+        </ng-template>
+
+        <ng-template ngSwitchDefault>
+          <div (click)="logoutHandler()">{{ 'app.header.logout' | transloco }}</div>
+        </ng-template>
+      </div>
+
+      {{ user | json }}
+
     </div>
   </div>
+
+  <div class="container header__urls">
+
+  </div>
 </header>
-<div class="br3"></div>

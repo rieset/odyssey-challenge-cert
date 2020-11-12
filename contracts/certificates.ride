@@ -1,0 +1,196 @@
+{-# STDLIB_VERSION 3 #-}
+{-# CONTENT_TYPE DAPP #-}
+{-# SCRIPT_TYPE ACCOUNT #-}
+
+
+let QUORUM = 50  # 50% votes needed
+
+func tryGetInteger(key: String) = {
+    let val = match getInteger(this, key) {
+        case b:Int => b
+        case _ => 0
+    }
+    val
+}
+
+func isOwner(address: Address) = {
+    address == this
+}
+
+func getGroup() = {
+    let val = match getString(this, "working_members") {
+        case b:String => b
+        case _ => ""
+    }
+    val
+}
+
+func getMembers() = {
+    let val = match getString(this, "dao_members") {
+        case b:String => b
+        case _ => ""
+    }
+    val
+}
+
+func isGroupMember(a: Address) = {
+    # government working group membership check
+    tryGetInteger("working_member_"+a.toString()+"_weight") > 0
+}
+
+
+func canMemberVote(i: Invocation, templateId: String) = {
+    # certification center membership check
+    tryGetInteger("dao_member_"+i.caller.toString()+"_weight") > 0
+}
+
+
+# Team = Applicant
+# Group = Government
+# Member = Certification Center Expert
+
+
+@Callable(i)
+func addDAOMember(memberAddress: String) = {
+    if (!isOwner(i.caller)) then {
+        throw("access only to the DAO owner")
+    } else {
+        let group = getMembers()
+        let newGroup = group + ";" + memberAddress
+
+        let groupSize = tryGetInteger("dao_size")
+        let newGroupSize = groupSize + 1
+
+        WriteSet([
+            DataEntry("dao_members", newGroup),
+            DataEntry("dao_size", newGroupSize),
+            DataEntry("dao_member_"+memberAddress+"_weight", 1)
+        ])
+    }
+}
+
+
+@Callable(i)
+func addGroupMember(memberAddress: String) = {
+    if (!isOwner(i.caller)) then {
+        throw("access only to the DAO owner")
+    } else {
+        let group = getGroup()
+        let newGroup = group + ";" + memberAddress
+
+        let groupSize = tryGetInteger("working_size")
+        let newGroupSize = groupSize + 1
+
+        WriteSet([
+            DataEntry("working_members", newGroup),
+            DataEntry("working_size", newGroupSize),
+            DataEntry("working_member_"+memberAddress+"_weight", 1)
+        ])
+    }
+}
+
+
+@Callable(i)
+func proposeTemplate(title: String) = {
+  # Anyone // propose certification template
+  WriteSet([
+    DataEntry("template_" + i.transactionId.toBase58String() + "_title", title),
+    DataEntry("template_" + i.transactionId.toBase58String() + "_proposed", i.caller.toString()),
+    DataEntry("template_" + i.transactionId.toBase58String() + "_status", "proposed")
+  ])
+}
+
+
+@Callable(i)
+func acceptTemplate(templateId: String, certifier: String) = {
+  # Government // accept and set certification template
+  if (!(isGroupMember(i.caller))) then {
+      throw("government working group access only")
+  } else {
+      WriteSet([
+        DataEntry("template_" + templateId + "_center", certifier),
+        DataEntry("template_" + templateId + "_status", "accepted")
+      ])
+  }
+}
+
+
+@Callable(i)
+func requestCertificate(templateId: String, details: String) = {
+  # Anyone // request certificate for certification template
+  let listKey = "template_" + templateId + "_applicants"
+  let currentApplicantsList = match getString(this, listKey) {
+      case b:String => b
+      case _ => ""
+  }
+  let newApplicantsList = currentApplicantsList+";"+i.caller.toString()
+  ScriptResult(
+    WriteSet([
+        DataEntry("template_" + templateId + "_applicant_" + i.caller.toString() + "_status", "requested"),
+        DataEntry("template_" + templateId + "_applicant_" + i.caller.toString() + "_details", details),
+        # details field could be a link to the form and hash proof
+        DataEntry(listKey, newApplicantsList)
+    ])
+    TransferSet([Transfer(i.caller, 500000)])
+  )
+}
+
+
+@Callable(i)
+func voteForApplicant(templateId: String, applicant: String, voteValue: Int) = {
+  # Center Members // vote on applicant's certificate request
+  if (voteValue != -1 && voteValue != 1) then {
+    throw("vote value needs to be 1 or -1")
+  } else {
+    if (!canMemberVote(i, templateId)) then {
+        throw("this member is not certified to vote")
+    } else {
+        let voteKey = "template_" + templateId + "_applicant_" + applicant + "_vote_" + i.caller.toString()
+        let vote = tryGetInteger(voteKey)
+        if (vote != 0) then {
+            throw("this member has already voted on this applicant")
+        } else {
+            let teamVotesAmountKey = "template_" + templateId+"_applicant_"+applicant+"_votes"
+            let teamScoreKey = "template_" + templateId+"_applicant_"+applicant+"_score"
+
+            let teamVotesAmount = 1 + tryGetInteger(teamVotesAmountKey)
+            let newTeamScore = voteValue + tryGetInteger(teamScoreKey)
+
+            WriteSet([
+                DataEntry(voteKey, voteValue),
+                DataEntry(teamScoreKey, newTeamScore)
+            ])
+        }
+    }
+  }
+}
+
+
+@Callable(i)
+func finishApplicantVoting(templateId: String, applicant: String) = {
+  # Anyone // finish voting if qorum reached out
+  # as a result : certificate issued for applicant
+
+  func isApplicantVotedEnough(templateId: String, applicant: String) = {
+    let templateMinimumScore = "template_"+templateId+"_min_score"
+    let teamScoreAmountKey = "template_"+templateId+"_applicant_"+applicant+"_score"
+    let teamScore = tryGetInteger(teamScoreAmountKey)
+    if (teamScore > 0) then {
+        true
+    } else {
+        throw("not enough votes to make decision")
+    }
+  }
+
+  if (!isApplicantVotedEnough(templateId, applicant)) then {
+    throw("not enough experts voted to issue certificate")
+  } else {
+    WriteSet([
+      DataEntry("template_"+templateId+"_applicant_"+applicant+"_status", "approved")
+    ])
+  }
+}
+
+
+# @Verifier(tx)
+# func standardVerifier() = sigVerify(tx.bodyBytes, tx.proofs[0], tx.senderPublicKey)

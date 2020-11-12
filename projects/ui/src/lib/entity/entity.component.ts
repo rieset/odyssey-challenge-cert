@@ -12,7 +12,8 @@ import { GrantStatusEnum } from '../../../../services/src/interface'
 export class EntityComponent implements OnInit {
   @Input() grant: ContractGrantModel = {}
   grantStatusEnum = GrantStatusEnum
-  userRoleEnum = RoleEnum
+  public userRoleEnum = RoleEnum
+
   constructor (public userService: UserService) {}
 
   ngOnInit (): void {

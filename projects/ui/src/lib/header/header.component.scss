@@ -1,12 +1,21 @@
-@import 'mixins';
-@import '../../../../../resources/styles/variables';
+@import 'variables';
 
 .header {
+  background: url('/assets/header.jpg');
+  background-size: cover;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  min-height: 240px;
 
-  &__profile {
+  &__panel {
     display: flex;
+    justify-content: flex-end;
+    padding: $padding;
+    width: 100%;
+
+    &-link {
+      cursor: pointer;
+    }
   }
 
   &__back {

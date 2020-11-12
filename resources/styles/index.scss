@@ -24,7 +24,7 @@
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($app-theme-light);
+@include angular-material-theme($app-theme-dark);
 
 //html,
 //body {}
@@ -36,8 +36,8 @@ body { font-family: $font-family-base;
   margin: 0;}
 
 body {
-  background: rgba(var(--body-bg), 1);
-  color: rgba(var(--body-color), 0.9);
+  background: var(--body-bg);
+  color: var(--body-color);
 }
 
 // Global components
