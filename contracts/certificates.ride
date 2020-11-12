@@ -33,6 +33,14 @@ func getMembers() = {
     val
 }
 
+func isAuthor(a: Address, templateId: String) = {
+  let val = match getString(this, "template_" + templateId + "_proposed") {
+      case b:String => b
+      case _ => ""
+  }
+  val == a.toString()
+}
+
 func isGroupMember(a: Address) = {
     # government working group membership check
     tryGetInteger("working_member_"+a.toString()+"_weight") > 0
@@ -100,6 +108,20 @@ func proposeTemplate(title: String) = {
   ])
 }
 
+@Callable(i)
+func addTemplateDetails(templateId: String, description: String, author: String, company: String, link: String) = {
+    # will also contain task description / requirements / reward payment model
+    if (!(isAuthor(i.caller, templateId))) then {
+        throw("author access only")
+    } else {
+        WriteSet([
+            DataEntry("template_"+templateId+"_description", description),
+            DataEntry("template_"+templateId+"_author", author),
+            DataEntry("template_"+templateId+"_company", company),
+            DataEntry("template_"+templateId+"_link", link)
+        ])
+    }
+}
 
 @Callable(i)
 func acceptTemplate(templateId: String, certifier: String) = {
@@ -124,15 +146,15 @@ func requestCertificate(templateId: String, details: String) = {
       case _ => ""
   }
   let newApplicantsList = currentApplicantsList+";"+i.caller.toString()
-  ScriptResult(
+  # ScriptResult(
     WriteSet([
         DataEntry("template_" + templateId + "_applicant_" + i.caller.toString() + "_status", "requested"),
         DataEntry("template_" + templateId + "_applicant_" + i.caller.toString() + "_details", details),
         # details field could be a link to the form and hash proof
         DataEntry(listKey, newApplicantsList)
     ])
-    TransferSet([Transfer(i.caller, 500000)])
-  )
+    # TransferSet([Transfer(i.caller, 500000)])
+  # )
 }
 
 
