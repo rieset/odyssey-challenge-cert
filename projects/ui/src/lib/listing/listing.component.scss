@@ -1,13 +1,32 @@
 @import 'variables';
 
 .listing {
-  @include layout();
+  &__container {
+    --grid-column-gap: 8px;
+    @include layout();
+
+    &-lc {
+      @include column(span 4, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    &-rc {
+      @include column(span 8, 1);
+    }
+  }
 
   &__cards {
-    @include column(span 4, 1); }
+    flex: 1 1 auto;
+  }
+
+  &__issue-button {
+    flex: 0 0 auto;
+  }
 
   &__view {
-    @include column(span 8, 1); }
+    flex: 1 1 auto;
+  }
 
   &__card {
     display: flex;

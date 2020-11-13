@@ -1,0 +1,30 @@
+@import '../mixins';
+
+.sui-label {
+  border-radius: 5px;
+  font-size: em(10);
+  font-weight: 600;
+  line-height: calc(12/10);
+  padding: em(4) em(12);
+  text-transform: uppercase;
+
+  &.requested {
+    background: rgba(#797e8b, 0.12);
+    color: #bfc4d1;
+  }
+
+  &.declined {
+    background: rgba(#d9544a, 0.12);
+    color: #d9544a;
+  }
+
+  &.in-progress {
+    background: rgba(#3584da, 0.12);
+    color: #3584da;
+  }
+
+  &.confirmed {
+    background: rgba(#48bb1f, 0.12);
+    color: #48bb1f;
+  }
+}

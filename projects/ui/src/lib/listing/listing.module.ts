@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router'
 import { PipesModule } from '@libs/pipes/pipes.module'
 import { TranslocoModule } from '@ngneat/transloco'
 import { TagModule } from '@ui/tag/tag.module'
+import { MatButtonModule } from '@angular/material/button'
 
 @NgModule({
   declarations: [ListingComponent],
@@ -13,7 +14,8 @@ import { TagModule } from '@ui/tag/tag.module'
     RouterModule,
     TranslocoModule,
     PipesModule,
-    TagModule
+    TagModule,
+    MatButtonModule
   ],
   exports: [ListingComponent]
 })

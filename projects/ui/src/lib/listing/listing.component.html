@@ -1,19 +1,20 @@
-<div class="listing container"
+<div class="listing__container container"
      *ngIf="certs.data$ | async as list; else loadingOrErrorTemplate">
-
-    <div class="listing__cards">
+<!--  <pre>{{list | json}}</pre>-->
+    <div class="listing__container-lc">
+      <div class="listing__cards">
         <div class="listing__card"
              *ngFor="let entity of list;let i = index; trackBy: trackByFn"
              (click)="setCurrentCard(i)"
         >
-            <div class="listing__card-header">
-                <div class="listing__card-title">{{entity?.title?.value}}</div>
-                <div class="listing__card-desc">
-                    <span>{{entity?.author?.value}}</span>
+          <div class="listing__card-header">
+            <div class="listing__card-title">{{entity?.title?.value}}</div>
+            <div class="listing__card-desc">
+              <span>{{entity?.author?.value}}</span>
 
-                    <ng-container *ngIf="entity?.company">
-                        <span> {{ 'app.labels.in' | transloco }} </span>
-                        <span [ngSwitch]="!!entity?.link">
+              <ng-container *ngIf="entity?.company">
+                <span> {{ 'app.labels.in' | transloco }} </span>
+                <span [ngSwitch]="!!entity?.link">
                           <ng-template [ngSwitchCase]="true">
                             <a rel="noreferrer, nofolloww" target="_blank"
                                [attr.href]="entity?.link?.value">{{ entity?.company?.value }}</a>
@@ -22,17 +23,22 @@
                             <span>{{ entity?.company?.value }}</span>
                           </ng-template>
                         </span>
-                    </ng-container>
-                </div>
+              </ng-container>
             </div>
-            <div class="listing__card-status">
-                {{'listing.status.' + (entity?.status?.value || 'no_status') | transloco}}
-            </div>
+          </div>
+          <div class="listing__card-status">
+            {{'listing.status.' + (entity?.status?.value || 'no_status') | transloco}}
+          </div>
         </div>
+      </div>
+      <a class="listing__issue-button" mat-flat-button color="primary">
+        Issue a certificate
+      </a>
     </div>
-
-    <div class="listing__view" *ngIf="view$ | async as view">
+    <div class="listing__container-lc">
+      <div class="listing__view" *ngIf="view$ | async as view">
         <div [innerHTML]="view?.description?.value | safeHtml"></div>
+      </div>
     </div>
 </div>
 
