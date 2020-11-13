@@ -1,0 +1,44 @@
+<div class="create-certificate">
+
+    <div class="create-certificate__form" *ngIf="transactionId$ | async as transactionId else firstStep">
+        <form [formGroup]="details">
+            <mat-form-field class="registration-form__email" color="primary">
+                <mat-label>{{ 'certificate.create.description' | transloco }}</mat-label>
+                <textarea formControlName="description" matInput></textarea>
+            </mat-form-field>
+
+            <mat-form-field class="registration-form__email" color="primary">
+                <mat-label>{{ 'certificate.create.author' | transloco }}</mat-label>
+                <input formControlName="author" matInput [attr.placeholder]="'place'" />
+            </mat-form-field>
+
+            <mat-form-field class="registration-form__email" color="primary">
+                <mat-label>{{ 'certificate.create.company' | transloco }}</mat-label>
+                <input formControlName="company" matInput [attr.placeholder]="'place'" />
+            </mat-form-field>
+
+            <mat-form-field class="registration-form__email" color="primary">
+                <mat-label>{{ 'certificate.create.link' | transloco }}</mat-label>
+                <input formControlName="link" matInput [attr.placeholder]="'place'" />
+            </mat-form-field>
+
+            <button (click)="update()" mat-button color="primary">Update</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<ng-template #firstStep>
+    <form [formGroup]="form">
+        <mat-form-field class="registration-form__email" color="primary">
+            <mat-label>{{ 'certificate.create.title' | transloco }}</mat-label>
+            <input formControlName="title" matInput [attr.placeholder]="'place'" />
+        </mat-form-field>
+
+        <button (click)="create()" mat-button color="primary">Create</button>
+    </form>
+</ng-template>
+
+<button (click)="close()" mat-button color="primary">Close</button>

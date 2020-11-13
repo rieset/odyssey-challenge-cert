@@ -9,7 +9,7 @@ import {
   tap
 } from 'rxjs/operators'
 import { API, AppApiInterface } from '@constants'
-import { BehaviorSubject, Observable, Subject } from 'rxjs'
+import { BehaviorSubject, from, Observable, Subject } from 'rxjs'
 import {
   ContractCertificateModel,
   ContractDataModel,
@@ -19,6 +19,8 @@ import {
   ContractRawDataString
 } from './contract.model'
 import { PreloaderService } from '@services/preloader/preloader.service'
+import { SignerService } from '@services/signer/signer.service'
+import { IInvokeScriptTransaction, IWithApiMixin } from '@waves/ts-types'
 
 @Injectable({
   providedIn: 'root'
@@ -68,8 +70,13 @@ export class ContractService {
   constructor (
       private readonly http: HttpClient,
       private readonly preloaderService: PreloaderService,
+      private readonly signerService: SignerService,
       @Inject(API) private readonly api: AppApiInterface
   ) {}
+
+  public refresh () {
+    this.contractRefresh$.next(null)
+  }
 
   private group (keys: string[], context: {[s: string]: object}, value: ContractRawDataString|ContractRawDataNumber): void {
     // Todo поправить типизацию, пришлось лезть в контракт и переделывать структуру данных
@@ -103,5 +110,62 @@ export class ContractService {
     return this.stream.pipe(map((data) => {
       return data?.template[entityId]
     }))
+  }
+
+  public createCertificate (title: string): Observable<[IInvokeScriptTransaction<string | number> & IWithApiMixin]> {
+    return from(this.signerService.invoke('proposeTemplate',
+      [{ type: 'string', value: title }]))
+  }
+
+  public certificateDescription (
+    templateId: string,
+    description: string,
+    author: string,
+    company: string,
+    link: string
+  ): Observable<[IInvokeScriptTransaction<string | number> & IWithApiMixin]> {
+    console.log('Update data', templateId, description, author, company, link)
+    return from(this.signerService.invoke('addTemplateDetails', [
+      { type: 'string', value: templateId },
+      { type: 'string', value: description },
+      { type: 'string', value: author },
+      { type: 'string', value: company },
+      { type: 'string', value: link }
+    ]))
+  }
+
+  public acceptCertificate (templateId: string): Observable<[IInvokeScriptTransaction<string | number> & IWithApiMixin]> {
+    return from(this.signerService.invoke('acceptTemplate', [
+      { type: 'string', value: templateId }
+    ]))
+  }
+
+  public voteForApplicant (
+    templateId: string,
+    applicantId: string,
+    voteValue: number
+  ): Observable<[IInvokeScriptTransaction<string | number> & IWithApiMixin]> {
+    return from(this.signerService.invoke('voteForApplicant', [
+      { type: 'string', value: templateId },
+      { type: 'string', value: applicantId },
+      { type: 'integer', value: voteValue }
+    ]))
+  }
+
+  public finishApplicantVoting (
+    templateId: string,
+    applicantId: string
+  ): Observable<[IInvokeScriptTransaction<string | number> & IWithApiMixin]> {
+    return from(this.signerService.invoke('voteForApplicant', [
+      { type: 'string', value: templateId },
+      { type: 'string', value: applicantId }
+    ]))
+  }
+
+  public requestCertificate (templateId: string, details: string): Observable<[IInvokeScriptTransaction<string | number> & IWithApiMixin]> {
+    return from(this.signerService.invoke('requestCertificate', [
+      { type: 'string', value: templateId },
+      { type: 'string', value: details }
+    ]))
   }
 }

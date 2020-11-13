@@ -24,24 +24,28 @@ func isOwner(address: Address) = {
 }
 
 func getGroup() = {
-    let val = match getString(this, "working_group") {
+    let val = match getString(this, "working_members") {
         case b:String => b
         case _ => ""
     }
     val
 }
 
-func getMembers() = {
-    let val = match getString(this, "dao_members") {
+func getMembers(centerAddress: String) = {
+    let val = match getString(this, "center_" + centerAddress + "_members") {
         case b:String => b
         case _ => ""
     }
     val
+}
+
+func isAuthor(a: Address, templateId: String) = {
+  tryGetString("template_" + templateId + "_proposed") == a.toString()
 }
 
 func isGroupMember(a: Address) = {
     # government working group membership check
-    tryGetInteger("group_member_"+a.toString()) > 0
+    tryGetInteger("working_member_"+a.toString()) > 0
 }
 
 
@@ -63,15 +67,15 @@ func addDAOMember(memberAddress: String, centerAddress: String) = {
     if (!isOwner(i.caller)) then {
         throw("access only to the DAO owner")
     } else {
-        let group = getMembers()
+        let group = getMembers(centerAddress)
         let newGroup = group + ";" + memberAddress
 
-        let groupSize = tryGetInteger("dao_size")
+        let groupSize = tryGetInteger("center_" + centerAddress + "_size")
         let newGroupSize = groupSize + 1
 
         WriteSet([
-            DataEntry("dao_members", newGroup),
-            DataEntry("dao_size", newGroupSize),
+            DataEntry("center_" + centerAddress + "_members", newGroup),
+            DataEntry("center_" + centerAddress + "_size", newGroupSize),
             DataEntry("center_" + centerAddress + "_member_" + memberAddress, 1)
         ])
     }
@@ -87,13 +91,13 @@ func addGroupMember(memberAddress: String) = {
         let group = getGroup()
         let newGroup = group + ";" + memberAddress
 
-        let groupSize = tryGetInteger("working_group_size")
+        let groupSize = tryGetInteger("working_size")
         let newGroupSize = groupSize + 1
 
         WriteSet([
-            DataEntry("working_group", newGroup),
-            DataEntry("working_group_size", newGroupSize),
-            DataEntry("group_member_"+memberAddress, 1)
+            DataEntry("working_members", newGroup),
+            DataEntry("working_size", newGroupSize),
+            DataEntry("working_member_"+memberAddress, 1)
         ])
     }
 }
@@ -105,10 +109,24 @@ func proposeTemplate(title: String) = {
   WriteSet([
     DataEntry("template_" + i.transactionId.toBase58String() + "_title", title),
     DataEntry("template_" + i.transactionId.toBase58String() + "_status", "proposed"),
-    DataEntry("template_" + i.transactionId.toBase58String() + "_proposed_by", i.caller.toString())
+    DataEntry("template_" + i.transactionId.toBase58String() + "_proposed", i.caller.toString())
   ])
 }
 
+@Callable(i)
+func addTemplateDetails(templateId: String, description: String, author: String, company: String, link: String) = {
+    # will also contain task description / requirements / reward payment model
+    if (!(isAuthor(i.caller, templateId))) then {
+        throw("author access only")
+    } else {
+        WriteSet([
+            DataEntry("template_"+templateId+"_description", description),
+            DataEntry("template_"+templateId+"_author", author),
+            DataEntry("template_"+templateId+"_company", company),
+            DataEntry("template_"+templateId+"_link", link)
+        ])
+    }
+}
 
 @Callable(i)
 func acceptTemplate(templateId: String, certifier: String) = {

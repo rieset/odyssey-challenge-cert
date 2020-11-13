@@ -3,15 +3,15 @@ import {
   APP_CONSTANTS,
   AppConstantsInterface
 } from '@constants'
-import { SignerService } from '@services/signer/signer.service'
-import { SignerUser } from '@services/signer/signer.model'
 import { Observable, of } from 'rxjs'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { translate } from '@ngneat/transloco'
 import { Router } from '@angular/router'
 import { UserService } from '@services/user/user.service'
 import { RoleEnum, UserDataInterface } from '@services/user/user.interface'
-import { Location } from '@angular/common'
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { DialogComponent } from '@ui/dialog/dialog.component'
+import { CreateCertificateComponent } from '@ui/forms/create-certificate/create-certificate.component'
 
 @Component({
   selector: 'ui-header',
@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
     private snackBar: MatSnackBar,
     public router: Router,
     public userService: UserService,
-    private location: Location
+    public dialog: MatDialog
   ) {}
 
   ngOnInit (): void {}
@@ -47,7 +47,14 @@ export class HeaderComponent implements OnInit {
     })
   }
 
-  goBack (): void {
-    this.location.back()
+  createCertificate () {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {
+        component: CreateCertificateComponent,
+        params: {
+          templateId: null
+        }
+      }
+    })
   }
 }

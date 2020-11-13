@@ -4,6 +4,9 @@ import { HeaderComponent } from './header.component'
 import { TranslocoModule } from '@ngneat/transloco'
 import { PipesModule } from '@libs/pipes/pipes.module'
 import { RouterModule } from '@angular/router'
+import { MatButtonModule } from '@angular/material/button'
+import { DialogModule } from '@ui/dialog/dialog.module'
+import { CreateCertificateModule } from '@ui/forms/create-certificate/create-certificate.module'
 
 @NgModule({
   declarations: [HeaderComponent],
@@ -11,7 +14,10 @@ import { RouterModule } from '@angular/router'
     CommonModule,
     TranslocoModule,
     PipesModule,
-    RouterModule
+    RouterModule,
+    MatButtonModule,
+    DialogModule,
+    CreateCertificateModule
   ],
   exports: [HeaderComponent]
 })

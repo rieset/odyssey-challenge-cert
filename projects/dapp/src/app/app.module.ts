@@ -19,6 +19,9 @@ import { NgProgressHttpModule } from 'ngx-progressbar/http'
 import { provideApi, provideAppConstants } from './app.providers'
 import { PipesModule } from '@libs/pipes/pipes.module'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { ReactiveFormsModule } from '@angular/forms'
+import { MatInputModule } from '@angular/material/input'
 
 @NgModule({
   declarations: [
