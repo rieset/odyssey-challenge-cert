@@ -7,6 +7,26 @@
   flex-direction: column;
   min-height: 240px;
 
+  &__top {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: rem(20) rem(24);
+  }
+
+  &__mid {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__title {
+    font-size: em(48);
+    font-weight: 500;
+    line-height: calc(56/48);
+  }
+
   &__panel {
     display: flex;
     justify-content: flex-end;

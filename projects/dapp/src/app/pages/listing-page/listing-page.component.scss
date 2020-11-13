@@ -1,0 +1,8 @@
+@import 'mixins';
+
+.listing-page {
+  &__listing {
+    display: block;
+    margin: rem(16) auto;
+  }
+}

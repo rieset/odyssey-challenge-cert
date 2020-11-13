@@ -2,19 +2,23 @@
      *ngIf="certs.data$ | async as list; else loadingOrErrorTemplate">
 <!--  <pre>{{list | json}}</pre>-->
     <div class="listing__container-lc">
-      <div class="listing__cards">
-        <div class="listing__card"
-             *ngFor="let entity of list;let i = index; trackBy: trackByFn"
-             (click)="setCurrentCard(i)"
-        >
-          <div class="listing__card-header">
-            <div class="listing__card-title">{{entity?.title?.value}}</div>
-            <div class="listing__card-desc">
-              <span>{{entity?.author?.value}}</span>
+      <div class="listing__cards-search-container">
+        search
+      </div>
+      <div class="listing__cards-list-container">
+        <div class="listing__cards">
+          <div class="listing-card"
+               *ngFor="let entity of list;let i = index; trackBy: trackByFn"
+               (click)="setCurrentCard(i)"
+          >
+            <div class="listing-card__content">
+              <div class="listing-card__title">{{entity?.title?.value}}</div>
+              <div class="listing-card__desc">
+                <span>{{entity?.author?.value}}</span>
 
-              <ng-container *ngIf="entity?.company">
-                <span> {{ 'app.labels.in' | transloco }} </span>
-                <span [ngSwitch]="!!entity?.link">
+                <ng-container *ngIf="entity?.company">
+                  <span> {{ 'app.labels.in' | transloco }} </span>
+                  <span [ngSwitch]="!!entity?.link">
                           <ng-template [ngSwitchCase]="true">
                             <a rel="noreferrer, nofolloww" target="_blank"
                                [attr.href]="entity?.link?.value">{{ entity?.company?.value }}</a>
@@ -23,21 +27,74 @@
                             <span>{{ entity?.company?.value }}</span>
                           </ng-template>
                         </span>
-              </ng-container>
+                </ng-container>
+              </div>
             </div>
-          </div>
-          <div class="listing__card-status">
-            {{'listing.status.' + (entity?.status?.value || 'no_status') | transloco}}
+            <div class="listing-card__status">
+              <div
+                class="sui-label"
+                [ngClass]="{
+                  'confirmed': entity?.status?.value.toLowerCase() === 'accepted',
+                  'requested': entity?.status?.value.toLowerCase() === 'proposed'
+                }"
+              >
+                {{'listing.status.' + (entity?.status?.value || 'no_status') | transloco}}
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
       <a class="listing__issue-button" mat-flat-button color="primary">
         Issue a certificate
       </a>
     </div>
-    <div class="listing__container-lc">
-      <div class="listing__view" *ngIf="view$ | async as view">
-        <div [innerHTML]="view?.description?.value | safeHtml"></div>
+    <div class="listing__container-rc">
+      <div class="listing__detail" *ngIf="view$ | async as view">
+        <div class="listing__detail-content">
+          <div [innerHTML]="view?.description?.value | safeHtml"></div>
+        </div>
+        <div class="listing__detail-footer">
+          <div class="listing__detail-footer-statuses">
+            <div class="people-status-list">
+              <div class="people-status-list__title">
+                Confirmed by:
+              </div>
+              <div class="people-status-list__persons">
+                <ng-container *ngFor="let i of [].constructor(20); let j = index;">
+                  <ng-container *ngIf="j < 5">
+                    <span class="people-status-list__person"><img src="//via.placeholder.com/150x150" alt="img"></span>
+                  </ng-container>
+                  <ng-container *ngIf="j === [].constructor(20).length - 1">
+                    <span class="people-status-list__person">
+                      <span>+{{ [].constructor(20).length - 4  }}</span>
+                    </span>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+            <div class="people-status-list">
+              <div class="people-status-list__title">
+                Declined by:
+              </div>
+              <div class="people-status-list__persons">
+                <span class="people-status-list__person"><img src="//via.placeholder.com/150x150" alt="img"></span>
+              </div>
+            </div>
+          </div>
+          <div class="listing__detail-footer-buttons">
+            <a mat-stroked-button color="gray">
+              In progress
+            </a>
+            <a mat-stroked-button color="gray">
+              Decline
+            </a>
+            <a mat-flat-button color="primary">
+              Confirm
+            </a>
+          </div>
+
+        </div>
       </div>
     </div>
 </div>

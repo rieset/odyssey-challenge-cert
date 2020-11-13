@@ -5,7 +5,8 @@
   font-size: em(10);
   font-weight: 600;
   line-height: calc(12/10);
-  padding: em(4) em(12);
+  // TODO em child
+  padding: rem(4) rem(12);
   text-transform: uppercase;
 
   &.requested {

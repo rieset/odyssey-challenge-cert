@@ -1,8 +1,6 @@
 .mat-body {
-  .mat-flat-button,
-  .mat-raised-button,
-  .mat-fab,
-  .mat-mini-fab {
+  .mat-button-base {
+    line-height: 1;
     padding: em(10) em(24);
     transition: all 0.15s ease-in-out;
 
@@ -11,6 +9,25 @@
       line-height: calc(24/16);
     }
 
+    &.small {
+      font-weight: 500;
+      padding: em(6) em(16);
+
+      .mat-button-wrapper {
+        font-size: em(14);
+        line-height: calc(20/14);
+      }
+    }
+
+    &.large {
+      padding: em(16) em(32);
+    }
+  }
+
+  .mat-flat-button,
+  .mat-raised-button,
+  .mat-fab,
+  .mat-mini-fab {
     &.mat-primary {
       background-image: linear-gradient(to right, #00d2ff 0%, #3a7bd5 50%, #00d2ff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
       background-position: 0% 0%;
@@ -46,20 +63,10 @@
         width: em(24);
       }
     }
-
-    &.small {
-      font-weight: 500;
-      padding: em(6) em(16);
-
-      .mat-button-wrapper {
-        font-size: em(14);
-        line-height: calc(20/14);
-      }
-    }
-
-    &.large {
-      padding: em(16) em(32);
-    }
   }
+
+  //.mat-stroked-button{
+  //
+  //}
 }
 

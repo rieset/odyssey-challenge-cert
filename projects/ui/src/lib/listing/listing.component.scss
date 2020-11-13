@@ -13,19 +13,33 @@
 
     &-rc {
       @include column(span 8, 1);
+      background: #20283e;
+      border-radius: 3px;
     }
   }
 
-  &__cards {
-    flex: 1 1 auto;
+  &__cards-search-container {
+    background: #20283e;
+    border-bottom: 1px solid rgba(#fff, 0.08);
+    border-radius: 3px 3px 0 0;
+    flex: 0 0 100px;
   }
+
+  &__cards-list-container {
+    background: #20283e;
+    border-radius: 0 0 3px 3px;
+    flex: 1 1 auto;
+    overflow-y: scroll;
+  }
+
+
+  //&__cards {
+  //
+  //}
 
   &__issue-button {
     flex: 0 0 auto;
-  }
-
-  &__view {
-    flex: 1 1 auto;
+    margin-top: rem(8);
   }
 
   &__card {
@@ -38,4 +52,130 @@
     }
   }
 
+}
+
+.listing__detail {
+  display: flex;
+  flex-direction: column;
+
+  &-content {
+    flex: 1 1 auto;
+    padding: rem(32);
+  }
+
+  &-footer {
+    align-items: flex-end;
+    border-top: 1px solid rgba(#fff, 0.08);
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: space-between;
+    padding: rem(32);
+  }
+
+  &-footer-statuses {
+    display: flex;
+    flex: 0.6 0 auto;
+    justify-content: space-between;
+
+    .people-status-list {
+      margin-left: rem(20);
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
+  &-footer-buttons {
+    display: flex;
+    flex: 1 0 auto;
+    justify-content: flex-end;
+    margin-left: rem(20);
+
+    a {
+      margin-right: em(8);
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.people-status-list {
+  &__title {
+    color: #bfc4d1;
+    font-size: em(12);
+    line-height: calc(16/12);
+    margin-bottom: rem(8);
+  }
+
+  &__persons {
+    display: flex;
+  }
+
+  &__person {
+    align-items: center;
+    background: #1b2234;
+    border-radius: 100%;
+    display: flex;
+    height: em(24);
+    justify-content: center;
+    margin-left: -#{em(4)};
+    overflow: hidden;
+    width: em(24);
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    img {
+      object-fit: cover;
+      width: 100%;
+    }
+
+    span {
+      color: #bfc4d1;
+      font-size: em(11);
+      line-height: calc(20/11);
+    }
+  }
+}
+
+
+.listing-card {
+  align-items: center;
+  display: flex;
+  padding: rem(8) rem(16);
+
+  &__content {
+    display: block;
+  }
+
+  &__title {
+    color: #fff;
+    font-size: em(14);
+    font-weight: 500;
+    line-height: calc(20/14);
+  }
+
+  &__desc {
+    color: #bfc4d1;
+    font-size: em(11);
+    line-height: 1;
+
+    ::ng-deep a {
+      color: #3584da;
+      text-decoration: none;
+      transition: all 0.15s ease-in-out;
+
+      &:hover {
+        color: darken(#3584da, 15%);
+      }
+    }
+  }
+
+  &__status {
+    margin-left: auto;
+  }
 }

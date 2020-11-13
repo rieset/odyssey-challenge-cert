@@ -1,28 +1,28 @@
 <header class="header">
-
-  <div class="container header__panel">
+  <div class="header__top">
+    <div class="header__logo">
+      <img src="/assets/images/logo.svg" alt="logo">
+    </div>
     <div class="header__panel-link" *ngIf="user$ | async as user">
       <div [ngSwitch]="user?.userRole">
         <ng-template [ngSwitchCase]="RoleEnum.unauthorized">
           <div
-                  class="header__panel-link"
-                  (click)="signupHandler()"
-                  routerLinkActive="active">{{ 'app.header.signup' | transloco }}</div>
+            class="header__panel-link"
+            (click)="signupHandler()"
+            routerLinkActive="active">{{ 'app.header.signup' | transloco }}</div>
         </ng-template>
-
         <ng-template ngSwitchDefault>
           <div (click)="logoutHandler()">{{ 'app.header.logout' | transloco }}</div>
         </ng-template>
       </div>
 
       {{ user | json }}
-
     </div>
   </div>
-
-  <div class="container header__description">
-    {{ 'app.title' | transloco }}
-
-    <button (click)="createCertificate()" mat-button color="primary">Create certificate</button>
+  <div class="header__mid container">
+    <div class="header__title">
+      Certificate requests
+    </div>
+    <button (click)="createCertificate()" mat-stroked-button color="gray">Create certificate</button>
   </div>
 </header>
