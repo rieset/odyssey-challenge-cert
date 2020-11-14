@@ -5,7 +5,6 @@ import { ContractService } from '@services/contract/contract.service'
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
 import { map, take, tap } from 'rxjs/operators'
 import { API, AppApiInterface } from '@constants'
-import { SignerUser } from '@services/signer/signer.model'
 
 @Injectable({
   providedIn: 'root'
