@@ -5,6 +5,10 @@
 [![Linter](https://github.com/rieset/odyssey-challenge-cert/workflows/Linter/badge.svg)](https://github.com/rieset/odyssey-challenge-cert/actions)
 [![Testing](https://github.com/rieset/odyssey-challenge-cert/workflows/Testing/badge.svg)](https://github.com/rieset/odyssey-challenge-cert/actions)
 
+## Design prototype
+
+![Image1](https://raw.githubusercontent.com/rieset/odyssey-challenge-cert/master/design/prototype.png)
+
 ## Tools
 
 - All contract endpoints [Auto dApp Interface](https://waves-dapp.com/3Mvbw1Sx9xtM6akJrBPorkPpp4B3sJRFPFX)
