@@ -33,26 +33,6 @@ const routes: Routes = [
         path: environment.routing.about,
         loadChildren: () => import('./pages/about-page/about-page.module').then((m) => m.AboutPageModule),
         pathMatch: 'full'
-      },
-      {
-        path: environment.routing.applyGrant,
-        loadChildren: () => import('./pages/apply-grant-page/apply-grant-page.module').then((m) => m.ApplyGrantPageModule),
-        pathMatch: 'full'
-      },
-      {
-        path: environment.routing.setting,
-        loadChildren: () => import('./pages/setting-page/setting-page.module').then((m) => m.SettingPageModule),
-        pathMatch: 'full'
-      },
-      {
-        path: environment.routing.create,
-        loadChildren: () => import('./pages/create-entity-page/create-entity-page.module').then((m) => m.CreateEntityPageModule),
-        pathMatch: 'full'
-      },
-      {
-        path: environment.routing.stylesheet,
-        loadChildren: () => import('./pages/stylesheet-page/stylesheet-page.module').then((m) => m.StylesheetPageModule),
-        pathMatch: 'full'
       }
     ]
   },
