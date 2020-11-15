@@ -15,9 +15,14 @@ import { map } from 'rxjs/operators'
 export class ListingComponent implements OnInit {
   private current$ = new BehaviorSubject<number>(0);
 
-  public view$: Observable<ContractCertificateModel> = combineLatest([this.certs.data$, this.current$]).pipe(map(([list, current]) => {
-    return list[current]
-  }))
+  public view$: Observable<ContractCertificateModel> = combineLatest([this.certs.data$, this.current$])
+    .pipe(
+      map(([list, current]) => {
+        return {
+          ...list[current]
+        }
+      })
+    )
 
   constructor (
       @Inject(APP_CONSTANTS) public readonly constants: AppConstantsInterface,

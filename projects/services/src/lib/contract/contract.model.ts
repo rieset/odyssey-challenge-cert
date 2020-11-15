@@ -28,6 +28,8 @@ export interface ContractCertificateModel {
   company?: ContractRawDataString
   link?: ContractRawDataString
 
+  app?: ContractRawDataString
+
   // voting?: {
   //   amount?: ContractRawDataNumber
   //   state?: ContractRawDataNumber
