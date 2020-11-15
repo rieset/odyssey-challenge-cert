@@ -5,7 +5,7 @@ export const environment = {
     nodes: 'https://nodes-testnet.wavesnodes.com',
     signer: 'https://testnet.waves.exchange/signer/',
     rest: 'https://nodes-testnet.wavesnodes.com',
-    contractAddress: '3Mvbw1Sx9xtM6akJrBPorkPpp4B3sJRFPFX'
+    contractAddress: 'awawaawa'
   },
 
   // Routing constants on page

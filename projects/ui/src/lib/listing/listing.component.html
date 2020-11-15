@@ -45,9 +45,9 @@
         </div>
       </div>
 
-      <a class="listing__issue-button" mat-flat-button color="primary">
-        Issue a certificate
-      </a>
+<!--      <a class="listing__issue-button" mat-flat-button color="primary">-->
+<!--        Issue a certificate-->
+<!--      </a>-->
     </div>
     <div class="listing__container-rc">
       <div class="listing__detail" *ngIf="view$ | async as view">
@@ -55,44 +55,44 @@
           <div [innerHTML]="view?.description?.value | safeHtml"></div>
         </div>
         <div class="listing__detail-footer">
-          <div class="listing__detail-footer-statuses">
-            <div class="people-status-list">
-              <div class="people-status-list__title">
-                Confirmed by:
-              </div>
-              <div class="people-status-list__persons">
-                <ng-container *ngFor="let i of [].constructor(20); let j = index;">
-                  <ng-container *ngIf="j < 5">
-                    <span class="people-status-list__person"><img src="//via.placeholder.com/150x150" alt="img"></span>
-                  </ng-container>
-                  <ng-container *ngIf="j === [].constructor(20).length - 1">
-                    <span class="people-status-list__person">
-                      <span>+{{ [].constructor(20).length - 4  }}</span>
-                    </span>
-                  </ng-container>
-                </ng-container>
-              </div>
-            </div>
-            <div class="people-status-list">
-              <div class="people-status-list__title">
-                Declined by:
-              </div>
-              <div class="people-status-list__persons">
-                <span class="people-status-list__person"><img src="//via.placeholder.com/150x150" alt="img"></span>
-              </div>
-            </div>
-          </div>
-          <div class="listing__detail-footer-buttons">
-            <a mat-stroked-button color="gray">
-              In progress
-            </a>
-            <a mat-stroked-button color="gray">
-              Decline
-            </a>
-            <a mat-flat-button color="primary">
-              Confirm
-            </a>
-          </div>
+<!--          <div class="listing__detail-footer-statuses">-->
+<!--            <div class="people-status-list">-->
+<!--              <div class="people-status-list__title">-->
+<!--                Confirmed by:-->
+<!--              </div>-->
+<!--              <div class="people-status-list__persons">-->
+<!--                <ng-container *ngFor="let i of [].constructor(20); let j = index;">-->
+<!--                  <ng-container *ngIf="j < 5">-->
+<!--                    <span class="people-status-list__person"><img src="//via.placeholder.com/150x150" alt="img"></span>-->
+<!--                  </ng-container>-->
+<!--                  <ng-container *ngIf="j === [].constructor(20).length - 1">-->
+<!--                    <span class="people-status-list__person">-->
+<!--                      <span>+{{ [].constructor(20).length - 4  }}</span>-->
+<!--                    </span>-->
+<!--                  </ng-container>-->
+<!--                </ng-container>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="people-status-list">-->
+<!--              <div class="people-status-list__title">-->
+<!--                Declined by:-->
+<!--              </div>-->
+<!--              <div class="people-status-list__persons">-->
+<!--                <span class="people-status-list__person"><img src="//via.placeholder.com/150x150" alt="img"></span>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="listing__detail-footer-buttons">-->
+<!--            <a mat-stroked-button color="gray">-->
+<!--              In progress-->
+<!--            </a>-->
+<!--            <a mat-stroked-button color="gray">-->
+<!--              Decline-->
+<!--            </a>-->
+<!--            <a mat-flat-button color="primary">-->
+<!--              Confirm-->
+<!--            </a>-->
+<!--          </div>-->
 
         </div>
       </div>
